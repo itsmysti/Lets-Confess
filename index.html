@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  text-decoration: none;
+}
+.header{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem 7%;
+    background:transparent;
+    display: flex;
+    align-items: center;
+    z-index: 100;
+}
+.logo
+{
+    font-size: 2.5rem;
+    color: white;
+    font-weight: 700;
+    cursor: default;
+    margin-right: auto;
+}
+nav ul li{
+    list-style: none;
+    display: inline-block;
+}
+nav ul li a{
+    text-decoration: none;
+    color: white;
+    margin-left: 60px;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    transition: .4s;
+}
+nav ul li:not(:last-child) a:hover,
+nav ul li:not(:last-child) a:focus{
+    border-bottom: 2px solid white;
+}
+nav ul li.btn a{
+    background: transparent;
+    color: white;
+    border: 1px solid #f8f5f6;
+    padding: 9px 20px;
+    border-radius: 30px;
+    line-height: 1.4;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 150px;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(245.59deg, #a22160 7%, #c91453 28.53%, #0a0002 75.52% );
+}
+.Confession{
+  
+    padding: 20px 100px;
+    width: 100%;
+    min-height: 50vh;
+    display: flex;
+    background: transparent;  
+    justify-content: center;
+    align-items: center;
+}
+.Confession .form{
+    width: 50%;
+    margin: 30px;
+}
+.Confession .form h3{
+    color: white;
+    text-align: center;
+    font-size: 60px;
+    letter-spacing: normal;
+    line-height: 1;
+    margin: 0 0 45px;
+    font-family: 'Permanent Marker', cursive;
+}
+.Confession .form h1{
+    color: white;
+}
+.Confession .form .inputBx{
+    margin: 10px 0;
+}
+.Confession .form .inputBx p{
+    color: white;
+    margin: 10px 0;
+    font-size: 25px;
+}
+.Confession .form .inputBx input, 
+.Confession .form .inputBx textarea{
+    border: none;
+    outline: none;
+    padding: 10px;
+    width: 100%;
+    color: rgb(255, 255, 255);
+    background: transparent;
+    border: 1px solid white;
+    border-width: 2px;
+    min-height: 15px;
+    border-radius: 20px;
+    font-size: 1.1em;
+}
+.Confession .form .inputBx textarea{
+    height: 150px;
+}
+.Confession .form .inputBx input[type="submit"]{
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 15px 0;
+    outline: none;
+    background: transparent;
+    border: 1px solid white;
+    text-decoration: none; 
+    font-weight: 700;
+    width: 150px;
+    border-radius: 5px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+.Confession .form .inputBx input[type="submit"]:hover{
+    background: #c91453;
+    border: none;
+    color: #ffffff;
+    box-shadow: 0 0 10px #c91453;
+}
+  </style>
+  <meta charset="UTF-8">
+  <title>Sleepyhead</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  
+  <header class="header">
+    <a href="#" class="logo">LOGO.</a>
+
+    <nav>
+        <ul>
+            <li><a href="http://localhost:3000/main">Home</a></li>
+            <li><a href="http://localhost:3000/confession"> Trending Confessions</a></li>
+            <li class="btn"><a href="http://localhost:3000/login">Login</a></li>
+        </ul>
+    </nav>
+</header>
+  <div class="Confession">
+    <div class="form">
+      <h3>Lets Confess!</h3>
+      <form id="confessionForm">
+        <div class="inputBx">
+          <textarea name="text" placeholder="Type here.."></textarea>
+        </div>
+        <div class="inputBx">
+          <input type="submit" name="Submit">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="confessions"></div>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const confessionForm = document.getElementById('confessionForm');
+    const confessionsDiv = document.getElementById('confessions');
+console.log(confessionsDiv);
+    confessionForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const text = event.target.elements.text.value;
+      if (text.trim() === '') {
+        alert('Please enter a confession.');
+        return;
+      }
+
+      try {
+        const response = await axios.post('/confession', { text });
+        alert('Message sent successfully.');
+        confessionForm.reset();
+        fetchConfessions();
+      } catch (error) {
+        console.error(error);
+        if (error.response) {
+          alert('Error: ' + error.response.data.message);
+        } else {
+          alert('An error occurred while sending the message 1.');
+        }
+      }
+    });
+
+    async function fetchConfessions() {
+      try {
+        const response = await axios.get('/confession');
+        const confessionTexts = response.data;
+        confessionsDiv.innerHTML = '';
+
+      //  confessionTexts.forEach((text) => { 
+          // const confessionElement = document.createElement('div');
+        //   confessionElement.className = 'confession';
+        //   confessionElement.textContent = text;
+        //   confessionsDiv.appendChild(confessionElement);
+        // });
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred while retrieving confessions.');
+      }
+    }
+
+    // Fetch initial confessions when the page loads
+    fetchConfessions();
+  </script>
+</body>
+</html>
